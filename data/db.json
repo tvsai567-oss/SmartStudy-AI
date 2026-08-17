@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "usr_1786975176634_e7g4s",
+      "email": "sai_test@example.com",
+      "passwordHash": "850dea70fe8f17ca08cad5ecbad93df4e1ae105b2de6b18c0e7a7c8da729bda1",
+      "full_name": "Sai Student",
+      "class_level": 5,
+      "createdAt": "2026-08-17T13:59:36.634Z"
+    },
+    {
+      "id": "usr_1786977199935_rpvca",
+      "email": "saitakkellapati876@gmail.com",
+      "passwordHash": "d3b986568d63d45efbc11ad8b2234302f21444e6fac2c83400b362afd923bd11",
+      "full_name": "sai",
+      "class_level": 8,
+      "createdAt": "2026-08-17T14:33:19.935Z"
+    }
+  ],
+  "otps": [],
+  "chats": [],
+  "quizzes": []
+}

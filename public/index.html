@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="SmartStudy AI — Your personal AI tutor for school students. Get step-by-step homework help, practice quizzes, and personalized explanations.">
+  <meta name="theme-color" content="#6366f1">
+  <title>SmartStudy AI — Learn. Understand. Solve.</title>
+
+  <!-- Preconnect for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Marked.js for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
+
+  <!-- DOMPurify for safe HTML rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Favicon inline SVG -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════
+       APP ROOT — JS renders everything here
+  ════════════════════════════════════════════ -->
+  <div id="app">
+
+    <!-- ── AUTH VIEW ── -->
+    <div id="view-auth" class="view active">
+      <div class="auth-container">
+
+        <!-- Left panel: Branding -->
+        <div class="auth-brand">
+          <div class="auth-brand-content">
+            <div class="auth-logo">
+              <span class="logo-icon">🧠📚</span>
+              <span class="logo-text">SmartStudy AI</span>
+            </div>
+            <h1 class="auth-headline">Your Personal<br><span class="gradient-text">AI Tutor</span></h1>
+            <p class="auth-sub">Get step-by-step homework help, AI-generated quizzes, and personalized explanations
+              adapted to your class level.</p>
+            <div class="auth-features">
+              <div class="auth-feature">
+                <span class="feature-icon">🤖</span>
+                <div>
+                  <strong>AI-Powered Learning</strong>
+                  <span>Powered by Google Gemini</span>
+                </div>
+              </div>
+              <div class="auth-feature">
+                <span class="feature-icon">📷</span>
+                <div>
+                  <strong>Homework Image Solver</strong>
+                  <span>Upload and get instant solutions</span>
+                </div>
+              </div>
+              <div class="auth-feature">
+                <span class="feature-icon">🧠📚</span>
+                <div>
+                  <strong>Smart Quiz Generator</strong>
+                  <span>Practice with AI-generated quizzes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="auth-brand-bg"></div>
+        </div>
+
+        <!-- Right panel: Form -->
+        <div class="auth-form-panel">
+          <div class="auth-form-wrap">
+
+            <!-- Login Form -->
+            <div id="form-login" class="auth-form">
+              <h2>Welcome back</h2>
+              <p class="form-sub">Sign in to continue learning</p>
+              <div class="form-group">
+                <label for="login-email">Email</label>
+                <div class="input-wrap">
+                  <span class="input-icon">✉️</span>
+                  <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="login-password">Password</label>
+                <div class="input-wrap">
+                  <span class="input-icon">🔒</span>
+                  <input type="password" id="login-password" placeholder="Your password"
+                    autocomplete="current-password">
+                  <button class="toggle-pw" data-target="login-password" type="button"
+                    aria-label="Toggle password visibility">👁</button>
+                </div>
+              </div>
+              <div id="login-error" class="form-error hidden"></div>
+              <button id="btn-login" class="btn-primary btn-full">
+                <span class="btn-text">Sign In</span>
+                <span class="btn-loader hidden">⏳</span>
+              </button>
+              <p class="form-switch" style="margin-top: 10px;"><a href="#" id="link-forgot"
+                  style="font-size: 13px; color: var(--brand);">Forgot Password?</a></p>
+              <div class="form-divider"><span>or</span></div>
+              <button id="btn-guest" class="btn-secondary btn-full">Continue as Guest</button>
+              <p class="form-switch">Don't have an account? <a href="#" id="link-signup">Sign up free</a></p>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="form-signup" class="auth-form hidden">
+              <h2>Create account</h2>
+              <p class="form-sub">Start your learning journey today</p>
+              <div class="form-group">
+                <label for="signup-name">Full Name</label>
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signup-email">Email</label>
+                <div class="input-wrap">
+                  <span class="input-icon">✉️</span>
+                  <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signup-password">Password</label>
+                <div class="input-wrap">
+                  <span class="input-icon">🔒</span>
+                  <input type="password" id="signup-password" placeholder="Min 6 characters"
+                    autocomplete="new-password">
+                  <button class="toggle-pw" data-target="signup-password" type="button"
+                    aria-label="Toggle password visibility">👁</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signup-class">Your Class</label>
+                <div class="input-wrap">
+                  <span class="input-icon">🎓</span>
+                  <select id="signup-class">
+                    <option value="">Select your class</option>
+                    <option value="1">Class 1</option>
+                    <option value="2">Class 2</option>
+                    <option value="3">Class 3</option>
+                    <option value="4">Class 4</option>
+                    <option value="5">Class 5</option>
+                    <option value="6">Class 6</option>
+                    <option value="7">Class 7</option>
+                    <option value="8">Class 8</option>
+                    <option value="9">Class 9</option>
+                    <option value="10">Class 10</option>
+                    <option value="11">Class 11</option>
+                    <option value="12">Class 12</option>
+                  </select>
+                </div>
+              </div>
+              <div id="signup-error" class="form-error hidden"></div>
+              <button id="btn-signup" class="btn-primary btn-full">
+                <span class="btn-text">Create Account</span>
+                <span class="btn-loader hidden">⏳</span>
+              </button>
+              <p class="form-switch">Already have an account? <a href="#" id="link-login">Sign in</a></p>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="form-forgot" class="auth-form hidden">
+              <h2>Reset Password</h2>
+              <p class="form-sub">We'll send a 6-digit OTP code to your email</p>
+
+              <!-- Step 1: Request OTP -->
+              <div id="forgot-step-1">
+                <div class="form-group">
+                  <label for="forgot-email">Email</label>
+                  <div class="input-wrap">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email">
+                  </div>
+                </div>
+                <div id="forgot-error-1" class="form-error hidden"></div>
+                <button id="btn-send-otp" class="btn-primary btn-full">
+                  <span class="btn-text">Send OTP Code 📩</span>
+                  <span class="btn-loader hidden">⏳</span>
+                </button>
+              </div>
+
+              <!-- Step 2: Verify OTP & Reset Password -->
+              <div id="forgot-step-2" class="hidden">
+                <div class="form-group">
+                  <label for="forgot-otp">6-Digit OTP Code</label>
+                  <div class="input-wrap">
+                    <span class="input-icon">🔑</span>
+                    <input type="text" id="forgot-otp" placeholder="Enter 6-digit code" maxlength="6">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="forgot-new-password">New Password</label>
+                  <div class="input-wrap">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="forgot-new-password" placeholder="Min 6 characters">
+                    <button class="toggle-pw" data-target="forgot-new-password" type="button"
+                      aria-label="Toggle password visibility">👁</button>
+                  </div>
+                </div>
+                <div id="forgot-error-2" class="form-error hidden"></div>
+                <button id="btn-reset-pw" class="btn-primary btn-full">
+                  <span class="btn-text">Reset Password 🔒</span>
+                  <span class="btn-loader hidden">⏳</span>
+                </button>
+              </div>
+
+              <p class="form-switch" style="margin-top: 16px;">Remembered password? <a href="#"
+                  id="link-back-login">Back to Sign in</a></p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── MAIN APP VIEW ── -->
+    <div id="view-app" class="view hidden">
+      <div class="app-layout">
+
+        <!-- ── SIDEBAR ── -->
+        <aside id="sidebar" class="sidebar" aria-label="Navigation sidebar">
+
+          <!-- Sidebar Header -->
+          <div class="sidebar-header">
+            <div class="sidebar-logo">
+              <span class="logo-icon">🧠</span>
+              <span class="logo-text">SmartStudy</span>
+            </div>
+            <button id="btn-new-chat" class="btn-new-chat" title="New Chat" aria-label="Start new chat">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="sidebar-search">
+            <div class="search-wrap">
+              <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="chat-search" placeholder="Search chats..." autocomplete="off"
+                aria-label="Search chats">
+            </div>
+          </div>
+
+          <!-- Navigation -->
+          <nav class="sidebar-nav" aria-label="Main navigation">
+            <a href="#" class="nav-item active" data-view="home" aria-label="Home Dashboard">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" data-view="homework" aria-label="Homework Solver">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+              <span>Homework</span>
+            </a>
+            <a href="#" class="nav-item" data-view="subjects" aria-label="Subjects">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"></path>
+              </svg>
+              <span>Subjects</span>
+            </a>
+            <a href="#" class="nav-item" data-view="quiz" aria-label="Quizzes">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              <span>Quiz</span>
+            </a>
+            <a href="#" class="nav-item" data-view="progress" aria-label="My Progress">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              <span>Progress</span>
+            </a>
+          </nav>
+
+          <!-- Chat History -->
+          <div class="sidebar-section">
+            <span class="section-label">Chats</span>
+          </div>
+          <div id="chat-history-list" class="chat-history" aria-label="Chat history">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Sidebar Footer -->
+          <div class="sidebar-footer">
+            <button class="btn-profile" id="btn-profile-nav" aria-label="Profile settings">
+              <div class="avatar-mini" id="sidebar-avatar">S</div>
+              <div class="profile-info">
+                <span id="sidebar-name" class="profile-name">Student</span>
+                <span id="sidebar-class" class="profile-class">Class 8</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+            </button>
+          </div>
+
+        </aside>
+
+        <!-- ── MAIN CONTENT ── -->
+        <main class="main-content" id="main-content" aria-live="polite">
+
+          <!-- ─ HOME VIEW ─ -->
+          <section id="view-home" class="content-view" aria-label="Home dashboard">
+
+            <div class="home-header">
+              <div class="home-greeting">
+                <h1 id="greeting-text">Good morning! 👋</h1>
+                <p id="greeting-sub">Ready to learn something amazing today?</p>
+              </div>
+              <div class="home-actions">
+                <button class="icon-btn" id="btn-theme-toggle" title="Toggle theme" aria-label="Toggle dark/light mode">
+                  <span id="theme-icon">🌙</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Ask AI card -->
+            <div class="ask-ai-card">
+              <div class="ask-ai-header">
+                <span class="ai-badge">✨ AI Study Buddy</span>
+                <span class="ai-model">Powered by Gemini</span>
+              </div>
+              <p class="ask-ai-sub">What can I help you learn today?</p>
+              <div class="ask-ai-composer" id="home-composer">
+                <input type="text" id="home-question" placeholder="Ask anything... (e.g., What is photosynthesis?)"
+                  autocomplete="off" aria-label="Ask AI a question">
+                <button id="home-send" class="send-btn" aria-label="Send question">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Start -->
+            <div class="home-section">
+              <h2 class="section-title">Quick Start</h2>
+              <div class="subject-chips">
+                <button class="chip" data-subject="Mathematics">🧮 Mathematics</button>
+                <button class="chip" data-subject="Science">🔬 Science</button>
+                <button class="chip" data-subject="English">📖 English</button>
+                <button class="chip" data-subject="Computer Science">💻 Computer</button>
+                <button class="chip" data-subject="General Knowledge">🌟 GK</button>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="home-section">
+              <h2 class="section-title">Your Progress</h2>
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-icon">💬</div>
+                  <div class="stat-value" id="stat-questions">0</div>
+                  <div class="stat-label">Questions Asked</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">🧠</div>
+                  <div class="stat-value" id="stat-topics">0</div>
+                  <div class="stat-label">Topics Learned</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">🏆</div>
+                  <div class="stat-value" id="stat-score">—</div>
+                  <div class="stat-label">Best Quiz Score</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon">🔥</div>
+                  <div class="stat-value" id="stat-streak">0</div>
+                  <div class="stat-label">Day Streak</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Chats -->
+            <div class="home-section">
+              <h2 class="section-title">Recent Chats</h2>
+              <div id="recent-chats" class="recent-chats">
+                <div class="empty-state-sm">
+                  <span>💬</span>
+                  <p>No chats yet. Ask your first question!</p>
+                </div>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- ─ CHAT VIEW ─ -->
+          <section id="view-chat" class="content-view hidden" aria-label="AI Chat">
+
+            <div class="chat-layout">
+
+              <div class="chat-header">
+                <div class="chat-header-left">
+                  <button id="btn-back-to-home" class="icon-btn" title="Back" aria-label="Go back">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="19" y1="12" x2="5" y2="12"></line>
+                      <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                  </button>
+                  <div class="chat-title-wrap">
+                    <h2 id="chat-title-display" class="chat-title" contenteditable="false" spellcheck="false">New Chat
+                    </h2>
+                    <button class="icon-btn-sm" id="btn-rename-chat" title="Rename chat"
+                      aria-label="Rename this chat">✏️</button>
+                  </div>
+                </div>
+                <div class="chat-header-right">
+                  <select id="chat-subject-select" class="subject-select" aria-label="Select subject">
+                    <option value="">General</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="English">English</option>
+                    <option value="Social Studies">Social Studies</option>
+                    <option value="Computer Science">Computer Science</option>
+                  </select>
+                  <button class="icon-btn" id="btn-theme-toggle-chat" title="Toggle theme"
+                    aria-label="Toggle theme">🌙</button>
+                </div>
+              </div>
+
+              <!-- Messages Area -->
+              <div id="messages-area" class="messages-area" role="log" aria-label="Chat messages" aria-live="polite">
+                <div id="chat-empty" class="chat-empty">
+                  <div class="chat-empty-icon">🧠</div>
+                  <h3>SmartStudy AI</h3>
+                  <p>Ask me anything! I'll explain it in a way that makes perfect sense for your class level.</p>
+                  <div class="suggestion-chips" id="suggestion-chips">
+                    <button class="chip-sm" data-q="Explain photosynthesis simply">🌱 Photosynthesis</button>
+                    <button class="chip-sm" data-q="Help me solve quadratic equations">🧮 Quadratic Equations</button>
+                    <button class="chip-sm" data-q="What is Newton's first law?">⚙️ Newton's Law</button>
+                    <button class="chip-sm" data-q="How do I write a good essay?">📝 Essay Writing</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Typing Indicator -->
+              <div id="typing-indicator" class="typing-indicator hidden" aria-live="polite">
+                <div class="typing-avatar">🧠</div>
+                <div class="typing-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <span class="typing-text">SmartStudy AI is thinking...</span>
+              </div>
+
+              <!-- Chat Composer -->
+              <div class="chat-composer">
+                <div class="composer-inner">
+                  <button id="btn-attach" class="composer-icon-btn" title="Upload image or PDF"
+                    aria-label="Attach file">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48">
+                      </path>
+                    </svg>
+                  </button>
+                  <input type="file" id="file-input" accept="image/*,.pdf" style="display:none"
+                    aria-label="Choose file to upload">
+                  <div id="attachment-preview" class="attachment-preview hidden">
+                    <span id="attachment-name"></span>
+                    <button id="btn-remove-attachment" class="remove-attachment"
+                      aria-label="Remove attachment">✕</button>
+                  </div>
+                  <textarea id="chat-input" class="chat-textarea" placeholder="Ask SmartStudy anything..." rows="1"
+                    autocomplete="off" aria-label="Type your message"></textarea>
+                  <button id="btn-send" class="send-btn" disabled aria-label="Send message">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                  </button>
+                </div>
+                <p class="composer-hint">SmartStudy AI can make mistakes. Verify important info with your teacher.</p>
+              </div>
+
+            </div>
+
+          </section>
+
+          <!-- ─ HOMEWORK VIEW ─ -->
+          <section id="view-homework" class="content-view hidden" aria-label="Homework Solver">
+
+            <div class="page-header">
+              <h1 class="page-title">📚 Homework Solver</h1>
+              <p class="page-sub">Upload your homework image or type your question</p>
+            </div>
+
+            <div class="homework-layout">
+
+              <!-- Upload Area -->
+              <div class="upload-zone" id="upload-zone" role="button" aria-label="Upload homework image" tabindex="0">
+                <div id="upload-placeholder">
+                  <div class="upload-icon">📷</div>
+                  <h3>Upload Homework Image</h3>
+                  <p>Drag & drop or click to upload</p>
+                  <p class="upload-hint">Supports: JPG, PNG, WebP, PDF (max 10MB)</p>
+                </div>
+                <div id="upload-preview" class="hidden">
+                  <img id="preview-img" alt="Uploaded homework" class="preview-img">
+                  <div id="pdf-preview" class="pdf-preview hidden">
+                    <span class="pdf-icon">📄</span>
+                    <span id="pdf-name" class="pdf-name"></span>
+                  </div>
+                  <button id="btn-remove-hw" class="remove-upload" aria-label="Remove uploaded file">✕ Remove</button>
+                </div>
+              </div>
+              <input type="file" id="hw-file-input" accept="image/*,.pdf" style="display:none"
+                aria-label="Upload homework file">
+
+              <!-- Text Question -->
+              <div class="hw-text-section">
+                <label for="hw-question" class="hw-label">Question (optional with image)</label>
+                <textarea id="hw-question" class="hw-textarea"
+                  placeholder="Type your question here, or just upload an image..." rows="3"
+                  aria-label="Type your homework question"></textarea>
+              </div>
+
+              <!-- Subject -->
+              <div class="hw-select-row">
+                <div class="form-group-inline">
+                  <label for="hw-subject">Subject</label>
+                  <select id="hw-subject" aria-label="Select subject">
+                    <option value="">Auto-detect</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="English">English</option>
+                    <option value="Social Studies">Social Studies</option>
+                    <option value="Computer Science">Computer Science</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="hw-actions">
+                <button class="hw-action-btn active" data-action="solve" aria-pressed="true">
+                  <span class="action-icon">✅</span>
+                  <span>Solve It</span>
+                </button>
+                <button class="hw-action-btn" data-action="explain" aria-pressed="false">
+                  <span class="action-icon">💡</span>
+                  <span>Explain</span>
+                </button>
+                <button class="hw-action-btn" data-action="hint" aria-pressed="false">
+                  <span class="action-icon">🔍</span>
+                  <span>Give Hint</span>
+                </button>
+                <button class="hw-action-btn" data-action="similar" aria-pressed="false">
+                  <span class="action-icon">📝</span>
+                  <span>Similar Q's</span>
+                </button>
+              </div>
+
+              <button id="btn-hw-submit" class="btn-primary btn-hw-submit" aria-label="Submit homework for AI analysis">
+                <span class="btn-text">🤖 Analyze with AI</span>
+              </button>
+
+              <!-- Result Area -->
+              <div id="hw-result" class="hw-result hidden">
+                <div class="result-header">
+                  <div class="result-badge">🧠 SmartStudy AI</div>
+                  <button id="btn-copy-hw" class="icon-btn-sm" title="Copy result"
+                    aria-label="Copy AI response">📋</button>
+                </div>
+                <div id="hw-result-content" class="result-content markdown-body"></div>
+              </div>
+
+            </div>
+
+          </section>
+
+          <!-- ─ SUBJECTS VIEW ─ -->
+          <section id="view-subjects" class="content-view hidden" aria-label="Subjects">
+
+            <div class="page-header">
+              <h1 class="page-title">📚 Subjects</h1>
+              <p class="page-sub">Choose a subject to start learning</p>
+            </div>
+
+            <div class="subjects-grid" id="subjects-grid">
+              <!-- Dynamically populated -->
+            </div>
+
+          </section>
+
+          <!-- ─ QUIZ VIEW ─ -->
+          <section id="view-quiz" class="content-view hidden" aria-label="Quiz">
+
+            <!-- Quiz Setup -->
+            <div id="quiz-setup">
+              <div class="page-header">
+                <h1 class="page-title">🧠 AI Quiz Generator</h1>
+                <p class="page-sub">Test your knowledge with AI-generated questions</p>
+              </div>
+
+              <div class="quiz-setup-card">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="quiz-subject">Subject *</label>
+                    <select id="quiz-subject" aria-label="Select quiz subject">
+                      <option value="">Choose subject...</option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="Science">Science</option>
+                      <option value="English">English</option>
+                      <option value="Social Studies">Social Studies</option>
+                      <option value="Computer Science">Computer Science</option>
+                      <option value="General Knowledge">General Knowledge</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="quiz-topic">Topic (optional)</label>
+                    <input type="text" id="quiz-topic" placeholder="e.g., Photosynthesis, Fractions..."
+                      aria-label="Specific topic for quiz">
+                  </div>
+                  <div class="form-group">
+                    <label for="quiz-count">Number of Questions</label>
+                    <select id="quiz-count" aria-label="Number of quiz questions">
+                      <option value="5">5 questions</option>
+                      <option value="10" selected>10 questions</option>
+                      <option value="15">15 questions</option>
+                      <option value="20">20 questions</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="quiz-difficulty">Difficulty</label>
+                    <select id="quiz-difficulty" aria-label="Quiz difficulty level">
+                      <option value="easy">Easy 😊</option>
+                      <option value="medium" selected>Medium 🎯</option>
+                      <option value="hard">Hard 🔥</option>
+                    </select>
+                  </div>
+                </div>
+                <button id="btn-generate-quiz" class="btn-primary" aria-label="Generate AI quiz">
+                  <span class="btn-text">🎯 Generate Quiz</span>
+                  <span class="btn-loader hidden">⏳ Generating...</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quiz Playing -->
+            <div id="quiz-playing" class="hidden">
+              <div class="quiz-header">
+                <div class="quiz-progress-info">
+                  <span id="quiz-q-count">Question 1 of 10</span>
+                  <span id="quiz-subject-display" class="quiz-subject-tag"></span>
+                </div>
+                <div class="quiz-progress-bar">
+                  <div id="quiz-progress-fill" class="quiz-progress-fill" style="width:0%"></div>
+                </div>
+              </div>
+
+              <div class="quiz-card">
+                <div class="quiz-question-num" id="quiz-q-num">Question 1</div>
+                <h2 id="quiz-question" class="quiz-question-text"></h2>
+                <div id="quiz-options" class="quiz-options"></div>
+              </div>
+
+              <div class="quiz-nav">
+                <button id="btn-quiz-prev" class="btn-secondary" aria-label="Previous question">← Previous</button>
+                <button id="btn-quiz-next" class="btn-primary" aria-label="Next question">Next →</button>
+                <button id="btn-quiz-submit" class="btn-primary hidden" aria-label="Submit quiz">🏁 Submit Quiz</button>
+              </div>
+            </div>
+
+            <!-- Quiz Results -->
+            <div id="quiz-results" class="hidden">
+              <div class="results-hero">
+                <div class="results-emoji" id="results-emoji">🎉</div>
+                <h2 id="results-grade" class="results-grade"></h2>
+                <div class="score-circle">
+                  <span id="results-pct" class="score-pct">0%</span>
+                  <span class="score-label">Score</span>
+                </div>
+                <div class="score-details">
+                  <div class="score-detail">
+                    <span class="score-detail-val" id="results-correct">0</span>
+                    <span class="score-detail-lbl">Correct ✅</span>
+                  </div>
+                  <div class="score-detail">
+                    <span class="score-detail-val" id="results-wrong">0</span>
+                    <span class="score-detail-lbl">Wrong ❌</span>
+                  </div>
+                </div>
+              </div>
+
+              <div id="results-breakdown" class="results-breakdown"></div>
+
+              <div class="results-actions">
+                <button id="btn-retry-quiz" class="btn-primary">🔄 Try Again</button>
+                <button id="btn-new-quiz" class="btn-secondary">📚 New Quiz</button>
+                <button id="btn-practice-weak" class="btn-secondary" id="btn-practice-weak">💪 Practice Weak
+                  Areas</button>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- ─ PROGRESS VIEW ─ -->
+          <section id="view-progress" class="content-view hidden" aria-label="My Progress">
+
+            <div class="page-header">
+              <h1 class="page-title">📊 My Progress</h1>
+              <p class="page-sub">Track your learning journey</p>
+            </div>
+
+            <div class="progress-overview">
+              <div class="progress-stat-card highlight">
+                <div class="pstat-icon">💬</div>
+                <div class="pstat-value" id="prog-questions">0</div>
+                <div class="pstat-label">Total Questions</div>
+              </div>
+              <div class="progress-stat-card">
+                <div class="pstat-icon">🏆</div>
+                <div class="pstat-value" id="prog-quizzes">0</div>
+                <div class="pstat-label">Quizzes Taken</div>
+              </div>
+              <div class="progress-stat-card">
+                <div class="pstat-icon">⭐</div>
+                <div class="pstat-value" id="prog-avg-score">—</div>
+                <div class="pstat-label">Avg Quiz Score</div>
+              </div>
+              <div class="progress-stat-card">
+                <div class="pstat-icon">🔥</div>
+                <div class="pstat-value" id="prog-streak">0</div>
+                <div class="pstat-label">Day Streak</div>
+              </div>
+            </div>
+
+            <!-- Subject Performance -->
+            <div class="progress-section">
+              <h2 class="section-title">Subject Performance</h2>
+              <div id="subject-performance" class="subject-perf-grid">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Quiz History -->
+            <div class="progress-section">
+              <h2 class="section-title">Recent Quizzes</h2>
+              <div id="quiz-history-list" class="quiz-history">
+                <div class="empty-state-sm"><span>🧠</span>
+                  <p>No quizzes taken yet!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Study Plan -->
+            <div class="progress-section">
+              <h2 class="section-title">📅 AI Study Planner</h2>
+              <div class="study-plan-form">
+                <div class="study-plan-inputs">
+                  <input type="text" id="plan-subject" placeholder="Subject (e.g., Mathematics)"
+                    aria-label="Study plan subject">
+                  <input type="number" id="plan-days" placeholder="Days available" min="1" max="30" value="3"
+                    aria-label="Number of days for study plan">
+                  <input type="text" id="plan-topic" placeholder="Topic/Exam (optional)"
+                    aria-label="Specific topic for study plan">
+                </div>
+                <button id="btn-generate-plan" class="btn-primary" aria-label="Generate study plan">📅 Generate
+                  Plan</button>
+              </div>
+              <div id="study-plan-result" class="study-plan-result hidden">
+                <div class="result-header">
+                  <div class="result-badge">📅 Study Plan</div>
+                  <button id="btn-copy-plan" class="icon-btn-sm" title="Copy plan"
+                    aria-label="Copy study plan">📋</button>
+                </div>
+                <div id="study-plan-content" class="result-content markdown-body"></div>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- ─ PROFILE VIEW ─ -->
+          <section id="view-profile" class="content-view hidden" aria-label="My Profile">
+
+            <div class="page-header">
+              <h1 class="page-title">👤 My Profile</h1>
+              <p class="page-sub">Manage your account and preferences</p>
+            </div>
+
+            <div class="profile-layout">
+
+              <!-- Profile Card -->
+              <div class="profile-card">
+                <div class="profile-avatar-large" id="profile-avatar-display">S</div>
+                <h2 id="profile-name-display">Student</h2>
+                <p id="profile-email-display" class="profile-email">guest@smartstudy.ai</p>
+                <span class="class-badge" id="profile-class-badge">Class 8</span>
+              </div>
+
+              <!-- Edit Form -->
+              <div class="profile-form-section">
+                <h3>Edit Profile</h3>
+                <div class="form-group">
+                  <label for="prof-name">Full Name</label>
+                  <input type="text" id="prof-name" placeholder="Your name" aria-label="Your full name">
+                </div>
+                <div class="form-group">
+                  <label for="prof-school">School Name</label>
+                  <input type="text" id="prof-school" placeholder="Your school" aria-label="Your school name">
+                </div>
+                <div class="form-group">
+                  <label for="prof-class">Class</label>
+                  <select id="prof-class" aria-label="Your class level">
+                    <option value="1">Class 1</option>
+                    <option value="2">Class 2</option>
+                    <option value="3">Class 3</option>
+                    <option value="4">Class 4</option>
+                    <option value="5">Class 5</option>
+                    <option value="6">Class 6</option>
+                    <option value="7">Class 7</option>
+                    <option value="8" selected>Class 8</option>
+                    <option value="9">Class 9</option>
+                    <option value="10">Class 10</option>
+                    <option value="11">Class 11</option>
+                    <option value="12">Class 12</option>
+                  </select>
+                </div>
+                <button id="btn-save-profile" class="btn-primary" aria-label="Save profile changes">Save
+                  Changes</button>
+              </div>
+
+              <!-- Settings -->
+              <div class="profile-form-section">
+                <h3>Preferences</h3>
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <strong>Theme</strong>
+                    <span>Choose your display mode</span>
+                  </div>
+                  <div class="theme-toggle-group" role="group" aria-label="Theme selection">
+                    <button class="theme-opt" data-theme="light" aria-pressed="false">☀️ Light</button>
+                    <button class="theme-opt active" data-theme="dark" aria-pressed="true">🌙 Dark</button>
+                    <button class="theme-opt" data-theme="system" aria-pressed="false">💻 System</button>
+                  </div>
+                </div>
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <strong>AI Response Style</strong>
+                    <span>How detailed should answers be?</span>
+                  </div>
+                  <select id="response-style" aria-label="AI response detail level">
+                    <option value="simple">Simple</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="detailed">Detailed</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Danger Zone -->
+              <div class="danger-zone">
+                <h3>Account</h3>
+                <button id="btn-logout" class="btn-danger" aria-label="Sign out">🚪 Sign Out</button>
+                <button id="btn-clear-data" class="btn-danger-outline" aria-label="Clear all local data">🗑️ Clear All
+                  Data</button>
+              </div>
+
+            </div>
+
+          </section>
+
+        </main>
+
+      </div>
+
+      <!-- Mobile Bottom Navigation -->
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="#" class="mobile-nav-item active" data-view="home" aria-label="Home">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+          </svg>
+          <span>Home</span>
+        </a>
+        <a href="#" class="mobile-nav-item" data-view="homework" aria-label="Homework">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+          </svg>
+          <span>Homework</span>
+        </a>
+        <a href="#" class="mobile-nav-item mobile-nav-chat" data-view="chat" aria-label="Chat">
+          <span class="mobile-chat-btn">🧠</span>
+        </a>
+        <a href="#" class="mobile-nav-item" data-view="quiz" aria-label="Quiz">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"></path>
+          </svg>
+          <span>Quiz</span>
+        </a>
+        <a href="#" class="mobile-nav-item" data-view="profile" aria-label="Profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+
+    </div><!-- end view-app -->
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div id="sidebar-overlay" class="sidebar-overlay hidden" aria-hidden="true"></div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu hidden" role="menu" aria-label="Chat options">
+      <button class="ctx-item" data-action="rename" role="menuitem">✏️ Rename</button>
+      <button class="ctx-item" data-action="pin" role="menuitem">📌 Pin</button>
+      <button class="ctx-item" data-action="archive" role="menuitem">📦 Archive</button>
+      <div class="ctx-divider"></div>
+      <button class="ctx-item ctx-danger" data-action="delete" role="menuitem">🗑️ Delete</button>
+    </div>
+
+  </div><!-- end #app -->
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
