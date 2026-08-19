@@ -15,6 +15,14 @@
       "full_name": "sai",
       "class_level": 8,
       "createdAt": "2026-08-17T14:33:19.935Z"
+    },
+    {
+      "id": "usr_1787132517179_v31dz",
+      "email": "sai123@gmail.com",
+      "passwordHash": "bc0f90ea799c02e9421b566be62ee364acb500d27e7cd0e776b571ef29dce8d9",
+      "full_name": "saiiiiiii",
+      "class_level": 5,
+      "createdAt": "2026-08-19T09:41:57.180Z"
     }
   ],
   "otps": [],
