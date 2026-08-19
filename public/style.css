@@ -403,6 +403,7 @@ ol {
   position: relative;
   display: flex;
   align-items: center;
+  padding-left: 55px;
 }
 
 .input-icon {
@@ -424,6 +425,7 @@ ol {
   color: var(--text);
   transition: border-color var(--transition), box-shadow var(--transition);
   -webkit-appearance: none;
+  appearance: none;
 }
 
 .input-wrap input:focus,
